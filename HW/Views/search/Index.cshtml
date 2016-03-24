@@ -1,0 +1,58 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<html>
+<head>
+
+</head>
+<body>
+    訂單查詢
+    <table border="1" border-collapse="collapse">
+        <tr>
+            <td>訂單編號</td>
+            <td colspan="3"><input type="text" /></td>
+        </tr>
+        <tr>
+            <td>客戶名稱</td>
+            <td colspan="3"><input type="text" /></td>
+        </tr>
+        <tr>
+            <td>負責員工</td>
+            <td colspan="3">
+                <select name="emp">
+                <option>aa</option>
+                <option>bb</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>出貨公司</td>
+            <td colspan="3">
+                <select name="com">
+                    <option>zz</option>
+                    <option>yy</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>訂購日期</td>
+            <td><input type="date" /></td>
+            <td>出貨日期</td>
+            <td><input type="date" /></td>
+        </tr>
+        <tr>
+            <td>需要日期</td>
+            <td colspan="3"><input type="date" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="3"><button>查詢</button> <button>清除</button> <button>新增訂單</button></td>
+        </tr>
+
+    </table>
+</body>
+
+</html>
+
