@@ -3,55 +3,66 @@
     ViewBag.Title = "Index";
 }
 
+<h2>訂單查詢</h2>
 <html>
-<head>
-
-</head>
 <body>
-    訂單查詢
+    @using(Html.BeginForm("Index", "search", FormMethod.Post)){ 
+        
+    
     <table border="1" border-collapse="collapse">
         <tr>
             <td>訂單編號</td>
-            <td colspan="3"><input type="text" /></td>
+            <td colspan="3"><input type="text" name="orderId" /></td>
         </tr>
         <tr>
             <td>客戶名稱</td>
-            <td colspan="3"><input type="text" /></td>
+            <td colspan="3"><input type="text" name="custName" /></td>
         </tr>
         <tr>
             <td>負責員工</td>
             <td colspan="3">
                 <select name="emp">
-                <option>aa</option>
-                <option>bb</option>
+                    <option value="">選擇負責員工</option>
+                    @foreach (var item in ViewBag.ename)
+                    {
+                        <option>@item</option>
+                    }
                 </select>
             </td>
         </tr>
         <tr>
             <td>出貨公司</td>
             <td colspan="3">
-                <select name="com">
-                    <option>zz</option>
-                    <option>yy</option>
+                <select name="comp">
+                    <option value="">選擇出貨公司</option>
+                    @foreach (var item in ViewBag.comp)
+                    {
+                        <option>@item</option>
+                    }
                 </select>
             </td>
         </tr>
         <tr>
             <td>訂購日期</td>
-            <td><input type="date" /></td>
+            <td><input type="date" name="orderDate" /></td>
             <td>出貨日期</td>
-            <td><input type="date" /></td>
+            <td><input type="date" name="shipDate" /></td>
         </tr>
         <tr>
             <td>需要日期</td>
-            <td colspan="3"><input type="date" /></td>
+            <td colspan="3"><input type="date"  name="requestDate"/></td>
         </tr>
         <tr>
             <td></td>
-            <td colspan="3"><button>查詢</button> <button>清除</button> <button>新增訂單</button></td>
+            <td colspan="3">
+            <input type="submit" value="查詢"/>
+             <input type="reset" value="清除"/>
+             <button>新增訂單</button></td>
         </tr>
 
     </table>
+    }
+    
 </body>
 
 </html>

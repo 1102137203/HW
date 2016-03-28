@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewBag.Title = "search";
+}
+
+<h2>search</h2>
+<html>
+<body>
+    <table border="1">
+        <tr>
+            <td>訂單編號</td>
+            <td>客戶名稱</td>
+            <td>訂購日期</td>
+            <td>發貨日期</td>
+            <td></td>
+            <td></td>
+        </tr>
+        @foreach (var item in (List<HW.Models.Orders>)ViewBag.bingo)
+        {
+            <tr>
+                <td>@item.OrderID</td>
+                <td>@item.Customers.CompanyName</td>
+                <td>@item.OrderDate</td>
+                <td>@item.ShippedDate</td>
+                <td><button>修改</button></td>
+                <td><button>刪除</button></td>
+            </tr>
+        }
+    </table>
+</body>
+</html>
