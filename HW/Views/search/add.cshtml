@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "add";
+}
+
+<h2>add</h2>
+<html>
+<body>
+    <table border="1" border-collapse="collapse">
+        <tr>
+            <td>客戶名稱</td>
+            <td colspan="3">
+                <select name="custName">
+                    <option value=""></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>負責員工名稱</td>
+            <td colspan="3">
+                <select name="emp">
+                    <option value=""></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>訂單日期</td>
+            <td><input type="date" name="orderDate" /></td>
+            <td>需要日期</td>
+            <td><input type="date" name="requestDate" /></td>
+        </tr>
+        <tr>
+            <td>出貨日期</td>
+            <td colspan="3"><input type="date" name="shipDate" /></td>
+        </tr>
+        <tr>
+            <td>出貨公司名稱</td>
+            <td colspan="3">
+                <select name="shipName">
+                    <option value=""></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>運費</td>
+            <td colspan="3"><input type="text" name="cost" /></td>
+        </tr>
+        <tr>
+            <td>出貨國家</td>
+            <td><input type="text" name="shipcountry" /></td>
+            <td>出貨城市</td>
+            <td><input type="text" name="shipcity" /></td>
+        </tr>
+        <tr>
+            <td>出貨地區</td>
+            <td><input type="text" name="hsiparea" /></td>
+            <td>郵遞區號</td>
+            <td><input type="text" name="shipaddno" /></td>
+        </tr>
+        <tr>
+            <td>出貨地址</td>
+            <td><input type="text" name="shipaddress" /></td>
+            <td>出貨說明</td>
+            <td><input type="text" name="shipdesc" /></td>
+        </tr>
+        <tr>
+            <td>訂單金額總計</td>
+            <td colspan="3"><input type="text" name="total" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="3">
+                <a href=""><input type="button" value="存檔" /></a>
+                <a href="/search"><input type="button" value="回前一頁" /></a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

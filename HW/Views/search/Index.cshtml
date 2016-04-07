@@ -6,9 +6,8 @@
 <h2>訂單查詢</h2>
 <html>
 <body>
-    @using(Html.BeginForm("Index", "search", FormMethod.Post)){ 
-        
-    
+    @using(Html.BeginForm("Index", "search", FormMethod.Post)){ //導向searchcontroller的post的index 
+      
     <table border="1" border-collapse="collapse">
         <tr>
             <td>訂單編號</td>
@@ -55,9 +54,9 @@
         <tr>
             <td></td>
             <td colspan="3">
-            <input type="submit" value="查詢"/>
-             <input type="reset" value="清除"/>
-             <button>新增訂單</button></td>
+                <input type="submit" value="查詢" />
+                <input type="reset" value="清除" />
+                <a href="/search/add"><input type="button" value="新增訂單" /></a>
         </tr>
 
     </table>

@@ -22,8 +22,8 @@
                 <td>@item.Customers.CompanyName</td>
                 <td>@item.OrderDate</td>
                 <td>@item.ShippedDate</td>
-                <td><button>修改</button></td>
-                <td><button>刪除</button></td>
+                <td><a href="/search/update?orderId=@item.OrderID"><input type="button" value="修改"/></a></td>
+                <td><a href="/search/delete"><input type="button"value="刪除" /></a></td>
             </tr>
         }
     </table>

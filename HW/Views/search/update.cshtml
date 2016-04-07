@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "update";
+}
+
+<h2>update</h2>
+
+<html>
+<body>
+    <table border="1" border-collapse="collapse">
+        <tr>
+            <td>訂單編號</td>
+            <td colspan="3"><input type="text" name="orderId" value="@ViewBag.data.OrderID"/></td>
+        </tr>
+        <tr>
+            <td>客戶名稱</td>
+            <td colspan="3">
+                <select name="custName">
+                    <option value="@ViewBag.CustCompanyName">@ViewBag.CustCompanyName</option>
+                    @foreach (var item in ViewBag.custcompanyNameList)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>負責員工名稱</td>
+            <td colspan="3">
+                <select name="emp">
+                    <option value="@ViewBag.EmployeesFirstName">@ViewBag.EmployeesFirstName</option>
+                    @foreach (var item in ViewBag.firstNameList)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>訂單日期</td>
+            <td><input type="date" name="orderDate" value="@ViewBag.orderDate"/></td>
+            <td>需要日期</td>
+            <td><input type="date" name="requestDate" value="@ViewBag.requireDate"/></td>
+        </tr>
+        <tr>
+            <td>出貨日期</td>
+            <td colspan="3"><input type="date" name="shipDate" value="@ViewBag.shipDate"/></td>
+        </tr>
+        <tr>
+            <td>出貨公司名稱</td>
+            <td colspan="3">
+                <select name="shipName">
+                    <option value="@ViewBag.ShippersCompanyName">@ViewBag.ShippersCompanyName</option>
+                    @foreach (var item in ViewBag.shipcompanyNameList)
+                    {
+                        <option value="@item">@item</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>運費</td>
+            <td colspan="3"><input type="text" name="cost" value="@ViewBag.data.Freight"/></td>
+        </tr>
+        <tr>
+            <td>出貨國家</td>
+            <td><input type="text" name="shipcountry" value="@ViewBag.data.ShipCountry"/></td>
+            <td>出貨城市</td>
+            <td><input type="text" name="shipcity" value="@ViewBag.data.ShipCity"/></td>
+        </tr>
+        <tr>
+            <td>出貨地區</td>
+            <td><input type="text" name="hsiparea" value="@ViewBag.data.ShipRegion"/></td>
+            <td>郵遞區號</td>
+            <td><input type="text" name="shipaddno" value="@ViewBag.data.ShipPostalCode"/></td>
+        </tr>
+        <tr>
+            <td>出貨地址</td>
+            <td><input type="text" name="shipaddress" value="@ViewBag.data.ShipAddress"/></td>
+            <td>出貨說明</td>
+            <td><input type="text" name="shipdesc" value="@ViewBag.data.ShipName"/></td>
+        </tr>
+        <tr>
+            <td>訂單金額總計</td>
+            <td colspan="3"><input type="text" name="total" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="3">
+                <a href=""><input type="button" value="存檔" /></a>
+                <a href=""><input type="button" value="刪除本筆訂單" /></a>
+                <a href="/search/search"><input type="button" value="回前一頁" /></a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
