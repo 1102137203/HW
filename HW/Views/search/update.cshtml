@@ -6,8 +6,8 @@
 <h2>update</h2>
 
 <html>
-<body>
-    <table border="1" border-collapse="collapse">
+<body onload="loadTable()">
+    <table border="1" border-collapse="collapse" style="width:100%">
         <tr>
             <td>訂單編號</td>
             <td colspan="3"><input type="text" name="orderId" value="@ViewBag.data.OrderID"/></td>
@@ -93,5 +93,136 @@
             </td>
         </tr>
     </table>
+    <br/>
+    訂單明細
+    <br/><br />
+    <input type="button" value="+新增明細" onclick="addrow()" /><br/>
+    <table  id="odetailTable" border="1" style="width:100%">
+        <tr>
+            <td>商品</td>
+            <td>單價</td>
+            <td>數量</td>
+            <td>小計</td>
+            <td></td>
+        </tr>
+    </table>
 </body>
 </html>
+<script type="text/javascript">
+    var count = document.getElementById("odetailTable").rows.length - 1;
+    function loadTable() {
+        var odetailTable = document.getElementById("odetailTable");
+        var tableData = odetailTable.tBodies[0];
+
+        @foreach (var item in (List<HW.Models.OrderDetails>)ViewBag.orderDetail)
+        {
+
+            @:count++;
+            @:var tr = document.createElement("tr");
+            @:var product = document.createElement("td");
+
+            //product
+            @:var select = document.createElement("select");
+            @:select.setAttribute("id", "product" + count);
+            @:select.setAttribute("onchange", "");//當發生改變
+            @:var option = new Option("@item.Products.ProductName", "@item.Products.ProductID"); //(name,value)
+
+            @:select.appendChild(option);
+
+            //option其他
+            foreach (var proData in (List<HW.Models.Products>)ViewBag.productData)
+            {
+                @:var option = new Option("@proData.ProductName", "@proData.ProductID");
+                @:select.appendChild(option);
+            }
+
+            //price
+            @:var price = document.createElement("td");
+            @:price.innerHTML = "<input type'text' id='price" + count + "' name='price' value='@item.UnitPrice'>";
+
+            //qty
+            @:var qty = document.createElement("td");
+            @:qty.innerHTML = "<input type'text' id='qty" + count + "' name='qty' value='@item.Qty'>";
+
+            //subtotal
+            @:var sum=@item.UnitPrice*@item.Qty;
+            @:var subtotal = document.createElement("td");
+            @:subtotal.innerHTML = "<input type'text' id='subtotal" + count + "' name='subtotal' value='"+sum+"'>";
+
+            //cancel
+            @:var cancel = document.createElement("td");
+            @:var button=document.createElement("button");
+
+            @:button.innerText="取消";
+            @:button.setAttribute("id",count);
+            @:button.setAttribute("onclick","delerow("+count+")");
+
+            //由內而外，順序
+            @:product.appendChild(select);
+            @:cancel.appendChild(button);
+            @:tr.appendChild(product); //產品
+            @:tr.appendChild(price);  //單價
+            @:tr.appendChild(qty);  //數量
+            @:tr.appendChild(subtotal);  //小計
+            @:tr.appendChild(cancel);  //取消
+            @:tableData.appendChild(tr);
+         }
+    }
+    function addrow(){
+        count++;
+        var odetailTable = document.getElementById("odetailTable");
+        var tableData = odetailTable.tBodies[0];
+
+        var tr = document.createElement("tr");
+        var product = document.createElement("td");
+        var select = document.createElement("select");
+        select.setAttribute("id", "product" + count);
+        select.setAttribute("onchange", "");//當發生改變
+        @foreach (var proData in (List<HW.Models.Products>)ViewBag.productData)
+        {
+            @:var option = new Option("@proData.ProductName", "@proData.ProductID");
+            @:select.appendChild(option);
+        }
+
+
+        //price
+        var price = document.createElement("td");
+        price.innerHTML = "<input type'text' id='price" + count + "' name='price'>";
+
+        //qty
+        var qty = document.createElement("td");
+        qty.innerHTML = "<input type'text' id='qty" + count + "' name='qty'>";
+
+        //subtotal
+        var sum=0;
+        var subtotal = document.createElement("td");
+        subtotal.innerHTML = "<input type'text' id='subtotal" + count + "' name='subtotal value='0'>";
+
+        //cancel
+        var cancel = document.createElement("td");
+        var button=document.createElement("button");
+
+        button.innerText="取消";
+        button.setAttribute("id",count);
+        button.setAttribute("onclick","delerow("+count+")");
+
+        product.appendChild(select);
+        cancel.appendChild(button);
+        tr.appendChild(product); //產品
+        tr.appendChild(price);  //單價
+        tr.appendChild(qty);  //數量
+        tr.appendChild(subtotal);  //小計
+        tr.appendChild(cancel);  //取消
+        tableData.appendChild(tr);
+    }
+    function delerow(num){
+        var odetailTable = document.getElementById("odetailTable");
+        if(num!=count){
+            num++;
+        }else{
+            num=count;
+        }
+        odetailTable.deleteRow(num);
+        count--;
+    }
+</script>

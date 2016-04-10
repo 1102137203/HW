@@ -141,7 +141,13 @@ namespace HW.Controllers
             List<String> bingocompanyName = db.Shippers.Where(x => x.CompanyName != ShippersCompanyName).Select(x => x.CompanyName).ToList();
             ViewBag.shipcompanyNameList = bingocompanyName;
 
-            
+            //找到明細資料
+            List<OrderDetails> orderDetail = db.OrderDetails.Where(x => x.OrderID.ToString() == orderId).ToList();
+            ViewBag.orderDetail = orderDetail;
+
+            //產品的list
+            List<Products> productData = db.Products.ToList();
+            ViewBag.productData = productData;
 
             return View();
         }
