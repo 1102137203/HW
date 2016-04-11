@@ -72,8 +72,11 @@ namespace HW.Controllers
 
             Orders data = new Orders();
             String CustomersCompanyName="";
+            String CustomersCampanyId = "";
             String EmployeesFirstName = "";
+            String EmployeeID = "";
             String ShippersCompanyName = "";
+            String ShipperID = "";
 
             String orderDate = "";
             String orderMonth = "";
@@ -100,8 +103,13 @@ namespace HW.Controllers
                 data.ShipName = item.ShipName;
 
                 CustomersCompanyName = item.Customers.CompanyName;
+                CustomersCampanyId = item.CustomerID.ToString();
+
                 EmployeesFirstName = item.Employees.FirstName;
+                EmployeeID = item.EmployeeID.ToString();
+
                 ShippersCompanyName = item.Shippers.CompanyName;
+                ShipperID = item.ShipperID.ToString();
 
                 //日期，alterDate是function傳到下面
                 //orderDate
@@ -122,23 +130,28 @@ namespace HW.Controllers
 
             ViewBag.data = data;
             ViewBag.CustCompanyName = CustomersCompanyName;
+            ViewBag.CustomersCampanyId = CustomersCampanyId;
+
             ViewBag.EmployeesFirstName = EmployeesFirstName;
+            ViewBag.EmployeeID = EmployeeID;
+
             ViewBag.ShippersCompanyName = ShippersCompanyName;
+            ViewBag.ShipperID = ShipperID;
 
             ViewBag.orderDate = orderDate;
             ViewBag.requireDate = requireDate;
             ViewBag.shipDate = shipDate;
 
             //客戶名稱
-            List<String> bingocomName = db.Customers.Where(x=>x.CompanyName!= CustomersCompanyName).Select(x=>x.CompanyName).ToList();//找全部Customers
+            List<Customers> bingocomName = db.Customers.Where(x=>x.CompanyName!= CustomersCompanyName).ToList();//找全部Customers
             ViewBag.custcompanyNameList = bingocomName;
 
             //負責員工名稱
-            List<String> bingofirstName = db.Employees.Where(x => x.FirstName != EmployeesFirstName).Select(x => x.FirstName).ToList();
+            List<Employees> bingofirstName = db.Employees.Where(x => x.FirstName != EmployeesFirstName).ToList();
             ViewBag.firstNameList = bingofirstName;
 
             //出貨公司名稱
-            List<String> bingocompanyName = db.Shippers.Where(x => x.CompanyName != ShippersCompanyName).Select(x => x.CompanyName).ToList();
+            List<Shippers> bingocompanyName = db.Shippers.Where(x => x.CompanyName != ShippersCompanyName).ToList();
             ViewBag.shipcompanyNameList = bingocompanyName;
 
             //找到明細資料
@@ -167,5 +180,48 @@ namespace HW.Controllers
             return View();
         }
 
+        //找到對應的產品 傳價錢過去
+        public String orderPrice(int productId) {
+            String price = db.Products.Find(productId).UnitPrice.ToString();
+            return price;
+        }
+
+        [HttpPost]
+        public ActionResult update(FormCollection inputs) {
+            String orderId= inputs["orderId"];//用名字找value
+            String custId = inputs["custName"];
+            String empId = inputs["emp"];
+            String orderDate = inputs["orderDate"];
+            String requestDate = inputs["requestDate"];
+            String shipDate = inputs["shipDate"];
+            String shipNameId = inputs["shipName"];
+            String cost = inputs["cost"];
+            String shipcountry = inputs["shipcountry"];
+            String shipcity = inputs["shipcity"];
+            String shiparea = inputs["shiparea"];
+            String shipaddno = inputs["shipaddno"];
+            String shipaddress = inputs["shipaddress"];
+            String shipdesc = inputs["shipdesc"];
+
+            Orders data = db.Orders.Find(Convert.ToInt32(orderId));
+
+            data.CustomerID = Convert.ToInt32(custId);
+            data.EmployeeID = Convert.ToInt32(empId);
+            data.OrderDate = Convert.ToDateTime(orderDate);
+            data.RequiredDate = Convert.ToDateTime(requestDate);
+            data.ShippedDate = Convert.ToDateTime(shipDate);
+            data.ShipperID = Convert.ToInt32(shipNameId);
+            data.Freight = Convert.ToDecimal(cost);
+            data.ShipCountry = shipcountry;
+            data.ShipCity = shipcity;
+            data.ShipRegion = shiparea;
+            data.ShipPostalCode = shipaddno;
+            data.ShipAddress = shipaddress;
+            data.ShipName = shipdesc;
+
+            db.SaveChanges();
+            return RedirectToAction("Index");
+            // Content("修改成功");
+        }
     }
 }

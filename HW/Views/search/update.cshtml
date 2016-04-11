@@ -7,6 +7,8 @@
 
 <html>
 <body onload="loadTable()">
+@using (Html.BeginForm("update", "search", FormMethod.Post))
+{
     <table border="1" border-collapse="collapse" style="width:100%">
         <tr>
             <td>訂單編號</td>
@@ -16,10 +18,10 @@
             <td>客戶名稱</td>
             <td colspan="3">
                 <select name="custName">
-                    <option value="@ViewBag.CustCompanyName">@ViewBag.CustCompanyName</option>
-                    @foreach (var item in ViewBag.custcompanyNameList)
+                    <option value="@ViewBag.CustomersCampanyId">@ViewBag.CustCompanyName</option>
+                    @foreach (var item in (List<HW.Models.Customers>)ViewBag.custcompanyNameList)
                     {
-                        <option value="@item">@item</option>
+                        <option value="@item.CustomerID">@item.CompanyName</option>
                     }
                 </select>
             </td>
@@ -28,10 +30,10 @@
             <td>負責員工名稱</td>
             <td colspan="3">
                 <select name="emp">
-                    <option value="@ViewBag.EmployeesFirstName">@ViewBag.EmployeesFirstName</option>
-                    @foreach (var item in ViewBag.firstNameList)
+                    <option value="@ViewBag.EmployeeID">@ViewBag.EmployeesFirstName</option>
+                    @foreach (var item in (List<HW.Models.Employees>)ViewBag.firstNameList)
                     {
-                        <option value="@item">@item</option>
+                        <option value="@item.EmployeeID">@item.FirstName</option>
                     }
                 </select>
             </td>
@@ -50,10 +52,10 @@
             <td>出貨公司名稱</td>
             <td colspan="3">
                 <select name="shipName">
-                    <option value="@ViewBag.ShippersCompanyName">@ViewBag.ShippersCompanyName</option>
-                    @foreach (var item in ViewBag.shipcompanyNameList)
+                    <option value="@ViewBag.ShipperID">@ViewBag.ShippersCompanyName</option>
+                    @foreach (var item in (List<HW.Models.Shippers>)ViewBag.shipcompanyNameList)
                     {
-                        <option value="@item">@item</option>
+                        <option value="@item.ShipperID">@item.CompanyName</option>
                     }
                 </select>
             </td>
@@ -70,7 +72,7 @@
         </tr>
         <tr>
             <td>出貨地區</td>
-            <td><input type="text" name="hsiparea" value="@ViewBag.data.ShipRegion"/></td>
+            <td><input type="text" name="shiparea" value="@ViewBag.data.ShipRegion"/></td>
             <td>郵遞區號</td>
             <td><input type="text" name="shipaddno" value="@ViewBag.data.ShipPostalCode"/></td>
         </tr>
@@ -87,25 +89,27 @@
         <tr>
             <td></td>
             <td colspan="3">
-                <a href=""><input type="button" value="存檔" /></a>
+                <input type="submit" value="存檔" />
                 <a href=""><input type="button" value="刪除本筆訂單" /></a>
                 <a href="/search/search"><input type="button" value="回前一頁" /></a>
             </td>
         </tr>
     </table>
-    <br/>
-    訂單明細
-    <br/><br />
-    <input type="button" value="+新增明細" onclick="addrow()" /><br/>
-    <table  id="odetailTable" border="1" style="width:100%">
-        <tr>
-            <td>商品</td>
-            <td>單價</td>
-            <td>數量</td>
-            <td>小計</td>
-            <td></td>
-        </tr>
-    </table>
+}
+        <br/>
+        <h5>訂單明細</h5>
+        <br/><br />
+        <input type="button" value="+新增明細" onclick="addrow()" /><br/>
+        <table  id="odetailTable" border="1" style="width:100%">
+            <tr>
+                <td>商品</td>
+                <td>單價</td>
+                <td>數量</td>
+                <td>小計</td>
+                <td></td>
+            </tr>
+        </table>    
+
 </body>
 </html>
 <script type="text/javascript">
@@ -124,8 +128,8 @@
             //product
             @:var select = document.createElement("select");
             @:select.setAttribute("id", "product" + count);
-            @:select.setAttribute("onchange", "");//當發生改變
-            @:var option = new Option("@item.Products.ProductName", "@item.Products.ProductID"); //(name,value)
+            @:select.setAttribute("onchange", "turnProduct('product" + count + "')");//當發生改變
+            @:var option = new Option("@item.Products.ProductName", "@item.Products.ProductID"); //(顯示出來的name,ID value)
 
             @:select.appendChild(option);
 
@@ -138,11 +142,11 @@
 
             //price
             @:var price = document.createElement("td");
-            @:price.innerHTML = "<input type'text' id='price" + count + "' name='price' value='@item.UnitPrice'>";
+            @:price.innerHTML = "<input type'text' id='price" + count + "' name='price' value='@item.UnitPrice' oninput='changesubtotal("+count+")'>";
 
             //qty
             @:var qty = document.createElement("td");
-            @:qty.innerHTML = "<input type'text' id='qty" + count + "' name='qty' value='@item.Qty'>";
+            @:qty.innerHTML = "<input type'text' id='qty" + count + "' name='qty' value='@item.Qty' oninput='changesubtotal("+count+")'>";
 
             //subtotal
             @:var sum=@item.UnitPrice*@item.Qty;
@@ -177,7 +181,7 @@
         var product = document.createElement("td");
         var select = document.createElement("select");
         select.setAttribute("id", "product" + count);
-        select.setAttribute("onchange", "");//當發生改變
+        select.setAttribute("onchange", "turnProduct('product" + count + "')");//當發生改變
         @foreach (var proData in (List<HW.Models.Products>)ViewBag.productData)
         {
             @:var option = new Option("@proData.ProductName", "@proData.ProductID");
@@ -187,11 +191,11 @@
 
         //price
         var price = document.createElement("td");
-        price.innerHTML = "<input type'text' id='price" + count + "' name='price'>";
+        price.innerHTML = "<input type'text' id='price" + count + "' name='price'  oninput='changesubtotal("+count+")'>";
 
         //qty
         var qty = document.createElement("td");
-        qty.innerHTML = "<input type'text' id='qty" + count + "' name='qty'>";
+        qty.innerHTML = "<input type'text' id='qty" + count + "' name='qty'  oninput='changesubtotal("+count+")'>";
 
         //subtotal
         var sum=0;
@@ -225,4 +229,46 @@
         odetailTable.deleteRow(num);
         count--;
     }
+    //改變產品選項
+    function turnProduct(selectId){
+        var select= document.getElementById(selectId);
+
+        for(var i=0;i<select.options.length;i++){
+            if(select.options[i].selected){
+                //console.log(select.options[i].value); 產品的ID
+                turnPrice(select.options[i].value,select.id);
+                break;
+            }
+        }
+    }
+    function turnPrice(productId,selectId){
+        var id=selectId.substring(7);  //分割product，1
+        var price=document.getElementById("price"+id);
+        var qty= document.getElementById("qty"+id);
+        var subtotal=document.getElementById("subtotal"+id);
+
+        $.ajax({
+            type:"GET",
+            url:"/search/orderPrice",
+            data:{
+                productId:productId
+            },
+            contentType:"application/json; charset=utf-8",
+            dataType:"json",
+            success:function(returnPrice){
+                price.value=returnPrice;
+                subtotal.value=Math.round(price.value*qty.value);
+            }
+        })
+    }
+
+    //修改單價或數量，小計改變
+    function changesubtotal(id){
+        var price=document.getElementById("price"+id);
+        var qty= document.getElementById("qty"+id);
+        var subtotal=document.getElementById("subtotal"+id);
+        subtotal.value=Math.round(price.value*qty.value);
+    }
+
+
 </script>
