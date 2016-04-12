@@ -174,12 +174,7 @@ namespace HW.Controllers
             change.Append(date);
             return change.ToString();
         }
-
-        public ActionResult add()
-        {
-            return View();
-        }
-
+        
         //找到對應的產品 傳價錢過去
         public String orderPrice(int productId) {
             String price = db.Products.Find(productId).UnitPrice.ToString();
@@ -222,6 +217,80 @@ namespace HW.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
             // Content("修改成功");
+        }
+
+        public ActionResult add() {
+            int orderId = db.Orders.Select(x => x.OrderID).Max()+1;
+            ViewBag.orderId = orderId;
+
+            //找出下拉式選單全部欄位
+            List<Customers> customers = db.Customers.ToList();
+            List<Employees> employees = db.Employees.ToList();
+            List<Shippers> shippers = db.Shippers.ToList();
+            List<Products> products = db.Products.ToList();
+            ViewBag.customers = customers;
+            ViewBag.employees = employees;
+            ViewBag.shippers = shippers;
+            ViewBag.products = products;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult add(FormCollection inputs)
+        {
+            //取得
+            String orderId = inputs["orderId"];//用名字找value
+            String custId = inputs["custName"];
+            String empId = inputs["emp"];
+            String orderDate = inputs["orderDate"];
+            String requestDate = inputs["requestDate"];
+            String shipDate = inputs["shipDate"];
+            String shipNameId = inputs["shipName"];
+            String cost = inputs["cost"];
+            String shipcountry = inputs["shipcountry"];
+            String shipcity = inputs["shipcity"];
+            String shiparea = inputs["shiparea"];
+            String shipaddno = inputs["shipaddno"];
+            String shipaddress = inputs["shipaddress"];
+            String shipdesc = inputs["shipdesc"];
+
+            Orders data = new Orders();
+            //修改
+            data.CustomerID = Convert.ToInt32(custId);
+            data.EmployeeID = Convert.ToInt32(empId);
+            data.OrderDate = Convert.ToDateTime(orderDate);
+            data.RequiredDate = Convert.ToDateTime(requestDate);
+            data.ShippedDate = Convert.ToDateTime(shipDate);
+            data.ShipperID = Convert.ToInt32(shipNameId);
+            data.Freight = Convert.ToDecimal(cost);
+            data.ShipCountry = shipcountry;
+            data.ShipCity = shipcity;
+            data.ShipRegion = shiparea;
+            data.ShipPostalCode = shipaddno;
+            data.ShipAddress = shipaddress;
+            data.ShipName = shipdesc;
+
+            db.Orders.Add(data);
+
+            //看有幾個select/product
+            int count = 0;
+            for (int i = 1; i < inputs.Count; i++) {
+                if (inputs.AllKeys.Contains("productName[" + i + "]")) {
+                    count++;
+                }
+            }
+            for (int i = 1; i <= count; i++) {
+                OrderDetails detailData = new OrderDetails();
+                detailData.OrderID = data.OrderID;
+                detailData.ProductID = Convert.ToInt32(inputs["productName[" + i + "]"]);
+                detailData.UnitPrice = Convert.ToDecimal(inputs["price[" + i + "]"]);
+                detailData.Qty = Convert.ToInt16(inputs["qty[" + i + "]"]);
+
+                data.OrderDetails.Add(detailData);
+            }
+
+            db.SaveChanges();
+            return RedirectToAction("Index");
+            // 或者是打=> Content("修改成功");
         }
     }
 }
