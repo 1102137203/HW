@@ -63,7 +63,7 @@
         </tr>
         <tr>
             <td>運費</td>
-            <td colspan="3"><input type="text" name="cost" value="@ViewBag.data.Freight"/></td>
+            <td colspan="3"><input type="text" name="cost" value="@ViewBag.data.Freight" oninput="changeTotal()"/></td>
         </tr>
         <tr>
             <td>出貨國家</td>
@@ -206,7 +206,7 @@
         //subtotal
         var sum=0;
         var subtotal = document.createElement("td");
-        subtotal.innerHTML = "<input type'text' id='subtotal" + count + "' name='subtotal value='0'>";
+        subtotal.innerHTML = "<input type'text' id='subtotal" + count + "' name='subtotal' value='0'>";
 
         //cancel
         var cancel = document.createElement("td");
