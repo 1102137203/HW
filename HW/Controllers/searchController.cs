@@ -162,6 +162,14 @@ namespace HW.Controllers
             List<Products> productData = db.Products.ToList();
             ViewBag.productData = productData;
 
+            Double total = 0;
+            foreach (var item in orderDetail)
+            {
+                total += item.Qty * Convert.ToDouble(item.UnitPrice);
+            }
+            total = Math.Round(total + Convert.ToDouble(data.Freight));
+            ViewBag.total = total;
+
             return View();
         }
 
@@ -214,6 +222,40 @@ namespace HW.Controllers
             data.ShipAddress = shipaddress;
             data.ShipName = shipdesc;
 
+            int count = 0;
+            for (int i = 1; i < inputs.Count; i++)
+            {
+                if (inputs.AllKeys.Contains("productName[" + i + "]"))
+                {
+                    count++;
+                }
+            }
+            List<OrderDetails> detailData = db.OrderDetails.Where(x => x.OrderID == data.OrderID).ToList();
+
+            //資料庫原本有的資料修改
+            int j = 0;
+            foreach (var item in detailData)
+            {
+                j++;
+                item.ProductID = Convert.ToInt32(inputs["productName[" + j + "]"]);
+                item.UnitPrice = Convert.ToDecimal(inputs["price[" + j + "]"]);
+                item.Qty = Convert.ToInt16(inputs["qty[" + j + "]"]);
+
+                data.OrderDetails.Add(item);
+            }
+
+            //新增的detail資料
+            for (int i = j+1; i <= count; i++)
+            {
+                OrderDetails addorderDetail = new OrderDetails();
+
+                addorderDetail.OrderID = data.OrderID;
+                addorderDetail.ProductID = Convert.ToInt32(inputs["productName[" + i + "]"]);
+                addorderDetail.UnitPrice = Convert.ToDecimal(inputs["price[" + i + "]"]);
+                addorderDetail.Qty = Convert.ToInt16(inputs["qty[" + i + "]"]);
+
+                data.OrderDetails.Add(addorderDetail);
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
             // Content("修改成功");
@@ -291,6 +333,17 @@ namespace HW.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
             // 或者是打=> Content("修改成功");
+        }
+
+        public void delete(int orderId) {
+            Orders order = db.Orders.Find(orderId); //找到orderId的order單
+            //orderdetail單
+            List<OrderDetails> orderDetail = db.OrderDetails.Where(x => x.OrderID == orderId).ToList();
+           
+            db.Orders.Remove(order);
+            db.OrderDetails.RemoveRange(orderDetail);
+            db.SaveChanges();
+                  
         }
     }
 }

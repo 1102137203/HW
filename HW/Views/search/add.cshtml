@@ -5,10 +5,10 @@
 
 <h2>add</h2>
 <html>
-<body  onload="loadTable()">
+<body>
 @using (Html.BeginForm("add", "search", FormMethod.Post))
 {
-    <table border="1" border-collapse="collapse"  style="width:100%">
+    <table border="1" border-collapse="collapse"  style="width:100%" class="table table-bordered">
             <tr>
                 <td>訂單編號</td>
                 <td colspan="3"><input type="text" name="orderId" value="@ViewBag.orderId " readonly="readonly"/></td>
@@ -86,16 +86,16 @@
             <tr>
                 <td></td>
                 <td colspan="3">
-                    <input type="submit" value="存檔" />
-                    <a href="/search"><input type="button" value="回前一頁" /></a>
+                    <input type="submit" class="btn btn-success" value="存檔" />
+                    <a href="/search"><input type="button" class="btn btn-info" value="回前一頁" /></a>
                 </td>
             </tr>
         </table>
     <br />
-    <h5>訂單明細</h5>
+    <h3>訂單明細</h3>
     <br /><br />
-    <input type="button" value="+新增明細" onclick="addrow()" /><br />
-    <table id="odetailTable" border="1" style="width:100%">
+    <input type="button" class="btn btn-default" value="+新增明細" onclick="addrow()" /><br />
+    <table id="odetailTable" border="1" style="width:100%" class="table table-bordered">
         <tr>
             <td>商品</td>
             <td>單價</td>
@@ -143,7 +143,7 @@
     //subtotal
     var sum=0;
     var subtotal = document.createElement("td");
-    subtotal.innerHTML = "<input type'text' id='subtotal" + count + "' value='0' name='subtotal value='0'>";
+    subtotal.innerHTML = "<input type'text' id='subtotal" + count + "' value='0' name='subtotal' value='0'>";
 
     //cancel
     var cancel = document.createElement("td");
@@ -151,7 +151,8 @@
 
     button.innerText="取消";
     button.setAttribute("id",count);
-    button.setAttribute("onclick","delerow("+count+")");
+    button.setAttribute("onclick", "delerow(" + count + ")");
+    button.setAttribute("class", "btn btn-danger");
 
     product.appendChild(select);
     cancel.appendChild(button);
@@ -178,8 +179,8 @@
 
         for (var i = 0; i < select.options.length; i++) {
             if (select.options[i].selected) {
-                //console.log(select.options[i].value); 產品的ID
                 turnPrice(select.options[i].value, select.id);
+                changeTotal();
                 break;
             }
         }
@@ -211,6 +212,20 @@
         var qty = document.getElementById("qty" + id);
         var subtotal = document.getElementById("subtotal" + id);
         subtotal.value = Math.round(price.value * qty.value);
+        changeTotal();
+    }
+    //改變total
+    function changeTotal() {
+        var value = 0;
+
+        var length = document.getElementById("odetailTable").rows.length - 1;
+
+        for (var i = 0; i < length; i++) {
+            value = Number(value) + Number(document.getElementsByName("subtotal")[i].value);
+           
+        }
+        value += Number(document.getElementsByName("cost")[0].value);
+        document.getElementsByName("total")[0].value = Math.round(value);
     }
 
 </script>

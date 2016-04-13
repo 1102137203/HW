@@ -1,12 +1,13 @@
 ﻿
 @{
     ViewBag.Title = "search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>search</h2>
 <html>
 <body>
-    <table border="1">
+    <table border="1"  style="width:100%"  class="table table-bordered">
         <tr>
             <td>訂單編號</td>
             <td>客戶名稱</td>
@@ -22,10 +23,25 @@
                 <td>@item.Customers.CompanyName</td>
                 <td>@item.OrderDate</td>
                 <td>@item.ShippedDate</td>
-                <td><a href="/search/update?orderId=@item.OrderID"><input type="button" value="修改"/></a></td>
-                <td><a href="/search/delete"><input type="button"value="刪除" /></a></td>
+                <td><a href="/search/update?orderId=@item.OrderID"><input type="button" class="btn btn-info" value="修改"/></a></td>
+                <td><input type="button" value="刪除"  class="btn btn-danger" onclick="deleorder('@item.OrderID')"/></td>
             </tr>
         }
     </table>
 </body>
 </html>
+<script>
+    function deleorder(orderId) {
+        $.ajax({
+            type: "GET",
+            url: "/search/delete",
+            data: {
+                orderId: orderId  //欄位:值，欄位跟傳入的名稱必須一樣
+            },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        })
+        alert("刪除成功");
+        document.location.reload();
+    }
+</script>
